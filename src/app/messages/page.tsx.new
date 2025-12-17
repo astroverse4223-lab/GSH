@@ -1,0 +1,66 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import MessagesClient from "./MessagesClient";
+import prisma from "@/lib/prisma";
+
+export default async function MessagesPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id) {
+    redirect("/auth/signin");
+  }
+
+  try {
+    // Get all conversations for the user with proper type casting
+    const conversations = await prisma.conversation.findMany({
+      where: {
+        participantIds: {
+          has: session.user.id,
+        },
+      },
+      include: {
+        participants: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          include: {
+            sender: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    }) || [];
+
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <MessagesClient 
+          initialConversations={conversations} 
+          currentUserId={session.user.id}
+        />
+      </div>
+    );
+  } catch (error) {
+    console.error("Error loading messages:", error);
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h2 className="text-xl font-semibold text-red-500">
+          Error loading messages. Please try again later.
+        </h2>
+      </div>
+    );
+  }
+}

@@ -1,0 +1,66 @@
+// Modified schema with XP enums and updated badge types
+
+enum XpAction {
+  POST_CREATE          // Creating a new post
+  POST_LIKE_RECEIVED   // Getting likes on posts
+  COMMENT_CREATE       // Creating a comment
+  COMMENT_LIKE_RECEIVED // Getting likes on comments
+  FRIEND_REQUEST_ACCEPTED // When a friend request is accepted
+  DAILY_LOGIN         // Daily login bonus
+  GAME_PLAYED         // Playing a game (tracked per session)
+  PROFILE_COMPLETED   // Completing profile information
+  GROUP_CREATE        // Creating a new group
+  GROUP_JOIN          // Joining a group
+  STREAM_START        // Starting a stream
+  VOICE_CHAT_JOIN     // Joining a voice chat
+}
+
+enum BadgeType {
+  POST_COUNT         // Number of posts created
+  COMMENT_COUNT      // Number of comments made
+  LIKES_RECEIVED     // Total likes received on posts/comments
+  DAILY_LOGIN        // Consecutive daily logins
+  LEVEL_REACHED     // Reaching specific levels
+  GAMES_PLAYED      // Number of different games played
+  STREAMS_HOSTED    // Number of streams hosted
+  SOCIAL_BUTTERFLY  // Number of friends made
+  GROUP_CREATOR     // Number of groups created
+  VOICE_CHAT_GURU   // Time spent in voice chats
+  ACHIEVEMENT       // Special achievements
+}
+
+enum BadgeTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+model XpActivity {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  action    XpAction
+  xpAmount  Int
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("xp_activities")
+}
+
+model Badge {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String      @unique
+  description String
+  type        BadgeType
+  imageUrl    String
+  requirement Int        // Number required to achieve (e.g., 10 likes)
+  tier        BadgeTier  @default(BRONZE)
+  createdAt   DateTime   @default(now())
+  
+  users       UserLevel[] @relation(fields: [userIds], references: [id])
+  userIds     String[]    @db.ObjectId
+
+  @@map("badges")
+}

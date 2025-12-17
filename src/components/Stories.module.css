@@ -1,0 +1,665 @@
+/* Stories Container */
+.storiesContainer {
+  margin-bottom: 1.5rem;
+}
+
+.storiesScroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.storiesScroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Story Cards */
+.storyCard,
+.createStoryCard {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 12px;
+  min-width: 80px;
+}
+
+.storyCard:hover,
+.createStoryCard:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.createStoryCard {
+  background: rgba(108, 92, 231, 0.1);
+  border: 2px dashed rgba(108, 92, 231, 0.3);
+}
+
+/* Avatar Styling */
+.storyAvatar,
+.createStoryAvatar {
+  position: relative;
+}
+
+.avatarContainer {
+  position: relative;
+}
+
+.avatarRing {
+  padding: 3px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+  transition: all 0.3s ease;
+}
+
+.avatarRing.unviewed {
+  background: linear-gradient(45deg, #00cec9, #55a3ff, #fd79a8);
+  animation: rainbow 3s ease-in-out infinite;
+}
+
+.avatarRing.viewed {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+}
+
+.avatarFallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border: 2px solid transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.show {
+  display: flex !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+.storyUserAvatarFallback {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border: 2px solid transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.addIcon {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  background: #6c5ce7;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid rgba(15, 23, 42, 1);
+}
+
+.gameStatusBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border: 2px solid rgba(108, 92, 231, 0.8);
+}
+
+/* Text Labels */
+.storyUsername,
+.createStoryText {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.storyTime {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.createStoryText {
+  color: #6c5ce7;
+  font-weight: 600;
+}
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Create Story Modal */
+.createModal {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.storyTypeTabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.typeTab {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.typeTab:hover {
+  border-color: rgba(108, 92, 231, 0.5);
+  color: white;
+}
+
+.typeTab.active {
+  background: rgba(108, 92, 231, 0.2);
+  border-color: #6c5ce7;
+  color: white;
+}
+
+.textInput {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 1rem;
+}
+
+.textInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+}
+
+.gamingStatusForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.statusSelect,
+.gameInput {
+  padding: 0.75rem;
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1rem;
+}
+
+.statusSelect:focus,
+.gameInput:focus {
+  outline: none;
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+}
+
+.gameInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancelButton,
+.createButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancelButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cancelButton:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.createButton {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  border: none;
+  color: white;
+}
+
+.createButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+.createButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Story Viewer */
+.storyViewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.storyContent {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.storyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.storyUserInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.storyUserAvatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.storyUserName {
+  font-weight: 600;
+  color: white;
+}
+
+.storyTimestamp {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.storyBody {
+  text-align: center;
+}
+
+.gamingStatusDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statusEmoji {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.statusText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statusAction {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.gameTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.textStoryContent {
+  font-size: 1.3rem;
+  color: white;
+  line-height: 1.5;
+  padding: 2rem 1rem;
+}
+
+/* Animations */
+@keyframes rainbow {
+  0%,
+  100% {
+    background: linear-gradient(45deg, #00cec9, #55a3ff);
+  }
+  25% {
+    background: linear-gradient(45deg, #55a3ff, #fd79a8);
+  }
+  50% {
+    background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+  }
+  75% {
+    background: linear-gradient(45deg, #fdcb6e, #6c5ce7);
+  }
+}
+
+/* Comprehensive Responsive Design */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .storiesContainer {
+    margin-bottom: 2rem;
+  }
+
+  .storiesScroll {
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 90px;
+    padding: 0.75rem;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  .storyUsername,
+  .createStoryText {
+    font-size: 0.875rem;
+  }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .storiesScroll {
+    gap: 1.125rem;
+    padding: 1.125rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 85px;
+  }
+
+  .avatar {
+    width: 65px;
+    height: 65px;
+  }
+}
+
+/* Large Tablet/Small Desktop (1025px - 1199px) */
+@media (max-width: 1199px) and (min-width: 1025px) {
+  .storiesScroll {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 80px;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Tablet (769px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .storiesContainer {
+    margin-bottom: 1.25rem;
+  }
+
+  .storiesScroll {
+    gap: 0.875rem;
+    padding: 0.875rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 75px;
+  }
+
+  .avatar {
+    width: 55px;
+    height: 55px;
+  }
+
+  .storyUsername,
+  .createStoryText {
+    font-size: 0.75rem;
+    max-width: 75px;
+  }
+}
+
+/* Small Tablet/Large Mobile (641px - 768px) */
+@media (max-width: 768px) and (min-width: 641px) {
+  .storiesContainer {
+    margin-bottom: 1rem;
+  }
+
+  .storiesScroll {
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 70px;
+  }
+
+  .avatar {
+    width: 52px;
+    height: 52px;
+  }
+
+  .storyUsername,
+  .createStoryText {
+    font-size: 0.7rem;
+    max-width: 70px;
+  }
+
+  .createModal,
+  .storyContent {
+    max-width: 400px;
+    padding: 1.75rem;
+  }
+}
+
+/* Mobile (480px - 640px) */
+@media (max-width: 640px) and (min-width: 481px) {
+  .storiesContainer {
+    margin-bottom: 1rem;
+  }
+
+  .storiesScroll {
+    gap: 0.625rem;
+    padding: 0.75rem 0;
+  }
+
+  .createModal,
+  .storyContent {
+    max-width: 350px;
+    padding: 1.5rem;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 65px;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .storyUsername,
+  .createStoryText {
+    max-width: 65px;
+    font-size: 0.675rem;
+  }
+}
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  .storiesContainer {
+    margin-bottom: 0.875rem;
+  }
+
+  .storiesScroll {
+    gap: 0.5rem;
+    padding: 0.625rem 0;
+  }
+
+  .storyCard,
+  .createStoryCard {
+    min-width: 60px;
+    padding: 0.375rem;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+  }
+
+  .avatarFallback {
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+  }
+
+  .storyUsername,
+  .createStoryText {
+    max-width: 60px;
+    font-size: 0.625rem;
+    line-height: 1.2;
+  }
+
+  .createModal,
+  .storyContent {
+    max-width: 320px;
+    padding: 1.25rem;
+  }
+}

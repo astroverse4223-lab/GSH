@@ -1,0 +1,234 @@
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: var(
+    --bg-primary,
+    linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  );
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  min-width: 280px;
+  max-width: 400px;
+  opacity: 0;
+  transform: translateX(100%) scale(0.8);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.notification.levelUp {
+  background: linear-gradient(135deg, #ffd700 0%, #ffb347 50%, #ff8c00 100%);
+  border-color: rgba(255, 215, 0, 0.5);
+  animation: levelUpPulse 0.6s ease-out;
+}
+
+@keyframes levelUpPulse {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  50% {
+    transform: translateX(0) scale(1.05);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-primary, white);
+}
+
+.levelUpBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.levelUpIcon {
+  font-size: 20px;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+.levelUpText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.levelUpTitle {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-primary, #1a1a1a);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.levelUpLevel {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.xpGain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.xpIcon {
+  font-size: 24px;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+.xpText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.xpAmount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary, white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.xpActivity {
+  font-size: 13px;
+  opacity: 0.9;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  text-transform: capitalize;
+}
+
+.targetUser {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-color, #ffd700);
+  background: rgba(255, 215, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-primary, white);
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .notification {
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .notification.levelUp {
+  background: linear-gradient(135deg, #d69e2e 0%, #ed8936 50%, #dd6b20 100%);
+}
+
+[data-theme="dark"] .levelUpTitle,
+[data-theme="dark"] .levelUpLevel {
+  color: #1a1a1a;
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .notification {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+[data-theme="light"] .notification.levelUp {
+  background: linear-gradient(135deg, #ffd700 0%, #ffb347 50%, #ff8c00 100%);
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .notification.levelUp .xpAmount,
+[data-theme="light"] .notification.levelUp .xpActivity {
+  color: #1a1a1a;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    min-width: auto;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .notification,
+  .levelUpIcon,
+  .xpIcon {
+    animation: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .notification.show {
+    transform: none;
+  }
+}

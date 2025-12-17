@@ -1,0 +1,13 @@
+// Copy all existing models and add the Subscription model before PlatformSettings
+model Subscription {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String    @unique @db.ObjectId
+  status     String    @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}

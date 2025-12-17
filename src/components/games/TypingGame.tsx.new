@@ -1,0 +1,161 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { NeonButton } from "@/components/ui/NeonButton";
+import styles from "./GameComponents.module.css";
+
+const TEXT_PROMPTS = [
+  "The quick brown fox jumps over the lazy dog.",
+  "In a world filled with gamers, every click counts and every keystroke matters.",
+  "Gaming is not just about winning, it's about the journey and the friends we make along the way.",
+  "Practice makes perfect, but perfect practice makes excellence in gaming.",
+  "A skilled gamer knows that strategy and timing are just as important as quick reflexes.",
+  "The best games are those that challenge us to think differently and push our limits.",
+  "Virtual worlds offer endless possibilities for adventure and discovery.",
+  "From simple puzzle games to complex RPGs, every genre has its own unique charm.",
+  "Communication and teamwork are essential skills in modern multiplayer gaming.",
+  "Gaming communities bring people together from all corners of the world.",
+];
+
+type GameState = "READY" | "PLAYING" | "FINISHED";
+
+export function TypingGame() {
+  const [gameState, setGameState] = useState<GameState>("READY");
+  const [currentText, setCurrentText] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [startTime, setStartTime] = useState<number>(0);
+  const [wpm, setWpm] = useState(0);
+  const [accuracy, setAccuracy] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+
+  const getRandomPrompt = () => {
+    return TEXT_PROMPTS[Math.floor(Math.random() * TEXT_PROMPTS.length)];
+  };
+
+  const startGame = () => {
+    setCurrentText(getRandomPrompt());
+    setUserInput("");
+    setStartTime(Date.now());
+    setGameState("PLAYING");
+    setWpm(0);
+    setAccuracy(0);
+  };
+
+  const calculateResults = useCallback(() => {
+    const endTime = Date.now();
+    const timeInMinutes = (endTime - startTime) / 60000;
+    const wordsTyped = userInput.trim().split(/\s+/).length;
+    const calculatedWpm = Math.round(wordsTyped / timeInMinutes);
+
+    let correct = 0;
+    const userWords = userInput.split(" ");
+    const targetWords = currentText.split(" ");
+    userWords.forEach((word, i) => {
+      if (word === targetWords[i]) correct++;
+    });
+    const calculatedAccuracy = Math.round((correct / targetWords.length) * 100);
+
+    setWpm(calculatedWpm);
+    setAccuracy(calculatedAccuracy);
+
+    if (calculatedWpm > highScore && calculatedAccuracy > 90) {
+      setHighScore(calculatedWpm);
+    }
+  }, [userInput, currentText, startTime, highScore]);
+
+  useEffect(() => {
+    if (gameState === "PLAYING" && userInput.length >= currentText.length) {
+      setGameState("FINISHED");
+      calculateResults();
+    }
+  }, [userInput, currentText, gameState, calculateResults]);
+
+  const renderText = () => {
+    return currentText.split("").map((char, index) => {
+      let className = styles.typingChar;
+      if (index < userInput.length) {
+        className +=
+          userInput[index] === char
+            ? ` ${styles.correct}`
+            : ` ${styles.incorrect}`;
+      } else if (index === userInput.length) {
+        className += ` ${styles.current}`;
+      }
+      return (
+        <span key={index} className={className}>
+          {char}
+        </span>
+      );
+    });
+  };
+
+  const getSpeedRating = (speed: number) => {
+    if (speed < 30) return "Keep practicing! 🌱";
+    if (speed < 50) return "Good progress! 🌟";
+    if (speed < 70) return "Fast typer! 🚀";
+    return "Lightning fast! ⚡";
+  };
+
+  return (
+    <div className={styles.gameContainer}>
+      <h1 className={styles.gameTitle}>Speed Typer</h1>
+      
+      <div className={styles.typingContainer}>
+        {gameState === "READY" ? (
+          <div className={styles.typingResults}>
+            <h2>Ready to Test Your Typing Speed?</h2>
+            <p>Type the text as fast and accurately as you can!</p>
+            <NeonButton onClick={startGame}>Start Game</NeonButton>
+          </div>
+        ) : (
+          <>
+            {gameState === "PLAYING" && (
+              <div className={styles.typingStats}>
+                <div className={styles.typingStat}>
+                  <h3>Progress</h3>
+                  <p>{Math.round((userInput.length / currentText.length) * 100)}%</p>
+                </div>
+              </div>
+            )}
+
+            <div className={styles.typingText}>{renderText()}</div>
+
+            <textarea
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              className={styles.typingInput}
+              placeholder="Start typing here..."
+              autoFocus
+              disabled={gameState === "FINISHED"}
+            />
+
+            {gameState === "FINISHED" && (
+              <div className={styles.typingResults}>
+                <h2>Game Over!</h2>
+                <div className={styles.typingStats}>
+                  <div className={styles.typingStat}>
+                    <h3>WPM</h3>
+                    <p>{wpm}</p>
+                  </div>
+                  <div className={styles.typingStat}>
+                    <h3>Accuracy</h3>
+                    <p>{accuracy}%</p>
+                  </div>
+                  <div className={styles.typingStat}>
+                    <h3>High Score</h3>
+                    <p>{highScore}</p>
+                  </div>
+                </div>
+                <p className={styles.score}>{getSpeedRating(wpm)}</p>
+                {wpm > highScore && accuracy > 90 && (
+                  <p className={styles.score}>New High Score! 🏆</p>
+                )}
+                <NeonButton onClick={startGame}>Try Again</NeonButton>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

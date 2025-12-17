@@ -1,0 +1,86 @@
+.layout {
+  min-height: 100vh;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  transition: background-image 0.3s ease;
+  background-image: var(--wallpaper-url);
+}
+
+.content {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.main {
+  flex: 1;
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--max-width, 90rem);
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Comprehensive Responsive Design */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .main {
+    padding: 2.5rem;
+    max-width: 95rem;
+  }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .main {
+    padding: 2rem 1.75rem;
+  }
+}
+
+/* Large Tablet/Small Desktop (1025px - 1199px) */
+@media (max-width: 1199px) and (min-width: 1025px) {
+  .main {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+/* Tablet (769px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .main {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/* Small Tablet/Large Mobile (641px - 768px) */
+@media (max-width: 768px) and (min-width: 641px) {
+  .main {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* Mobile (480px - 640px) */
+@media (max-width: 640px) and (min-width: 481px) {
+  .main {
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  .main {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .layout {
+    /* Optimize background for mobile */
+    background-attachment: scroll;
+  }
+}

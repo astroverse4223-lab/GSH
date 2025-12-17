@@ -1,0 +1,344 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+interface Message {
+  id: string;
+  content: string;
+  createdAt: Date | string;
+  senderId: string;
+  sender: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+}
+
+interface Conversation {
+  id: string;
+  participants: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  }[];
+  messages: Message[];
+  participantIds: string[];
+}
+
+interface Friend {
+  id: string;
+  name: string | null;
+  image: string | null;
+  lastSeen: Date | null;
+}
+
+export default function MessagesClient({
+  initialConversations,
+  currentUserId,
+  friends,
+}: {
+  initialConversations: Conversation[];
+  currentUserId: string;
+  friends: Friend[];
+}) {
+  const router = useRouter();
+  const [conversations, setConversations] = useState(initialConversations);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      fetchMessages(selectedConversation.id);
+    }
+  }, [selectedConversation]);
+
+  const fetchMessages = async (conversationId: string) => {
+    try {
+      const res = await fetch(`/api/messages?conversationId=${conversationId}`);
+      if (!res.ok) {
+        throw new Error('Failed to fetch messages');
+      }
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setMessages(data);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!message.trim()) {
+      console.error('Message is empty');
+      return;
+    }
+    
+    if (!selectedConversation) {
+      console.error('No conversation selected');
+      return;
+    }
+
+    if (!Array.isArray(selectedConversation.participants)) {
+      console.error('participants is not an array:', selectedConversation.participants);
+      return;
+    }
+
+    const receiver = selectedConversation.participants.find(
+      (p) => p.id !== currentUserId
+    );
+
+    if (!receiver) {
+      console.error('Could not find receiver in conversation');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: message,
+          receiverId: receiver.id,
+          conversationId: selectedConversation.id,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to send message');
+
+      const newMessage = await res.json();
+      
+      // Update messages state
+      setMessages((prev) => [newMessage, ...prev]);
+      setMessage('');
+
+      // Create notification for the receiver
+      try {
+        await fetch('/api/notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: receiver.id,
+            type: 'MESSAGE',
+            content: `${selectedConversation.participants.find(p => p.id === currentUserId)?.name || 'Someone'} sent you a message`,
+            messageId: newMessage.id,
+            link: `/messages?conversationId=${selectedConversation.id}`
+          }),
+        });
+      } catch (error) {
+        console.error('Error creating notification:', error);
+      }
+
+      router.refresh();
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+  const getOtherParticipant = (conversation: Conversation) => {
+    return conversation.participants.find((p) => p.id !== currentUserId);
+  };
+
+  const startNewConversation = async (friendId: string) => {
+    try {
+      const res = await fetch(`/api/messages?userId=${friendId}`);
+      if (!res.ok) throw new Error('Failed to start conversation');
+      const data = await res.json();
+      
+      if (data.conversation) {
+        setSelectedConversation(data.conversation);
+        setMessages(data.messages || []);
+        router.refresh();
+      }
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+    }
+  };
+
+  return (
+    <div className="flex h-[calc(100vh-100px)] bg-gray-100 dark:bg-gray-900">
+      {/* Sidebar with Conversations and Friends */}
+      <div className="w-1/4 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">Messages</h2>
+          
+          {/* Recent Conversations */}
+          <div className="mb-8">
+            <h3 className="text-sm font-semibold text-gray-500 mb-2">Recent Conversations</h3>
+            <div className="space-y-2">
+              {conversations.map((conversation) => {
+                const otherUser = getOtherParticipant(conversation);
+                return (
+                  <div
+                    key={conversation.id}
+                    className={`p-3 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 ${
+                      selectedConversation?.id === conversation.id
+                        ? "bg-gray-200 dark:bg-gray-800"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedConversation(conversation)}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        {otherUser?.image ? (
+                          <Image
+                            src={otherUser.image}
+                            alt={otherUser.name || "User"}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        ) : (
+                          <span className="text-lg font-semibold text-gray-600">
+                            {(otherUser?.name || "U")[0].toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-semibold">{otherUser?.name}</p>
+                        {conversation.messages[0] && (
+                          <p className="text-sm text-gray-500 truncate">
+                            {conversation.messages[0].content}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Friends List */}
+          <div className="mt-8">
+            <h3 className="text-sm font-semibold text-gray-500 mb-2">Friends</h3>
+            <div className="space-y-2">
+              {friends.map((friend) => (
+                <div
+                  key={friend.id}
+                  className="p-3 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center space-x-3"
+                  onClick={() => startNewConversation(friend.id)}
+                >
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                    {friend.image ? (
+                      <Image
+                        src={friend.image}
+                        alt={friend.name || 'Friend'}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <span className="text-lg font-semibold text-gray-600">
+                        {(friend.name || 'U')[0].toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{friend.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {friend.lastSeen
+                        ? `Last seen ${new Date(friend.lastSeen).toLocaleDateString()}`
+                        : 'Offline'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Area */}
+      <div className="flex-1 flex flex-col">
+        {selectedConversation ? (
+          <>
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((msg) => {
+                const isCurrentUser = msg.senderId === currentUserId;
+                return (
+                  <div
+                    key={msg.id}
+                    className={`flex items-end space-x-2 ${
+                      isCurrentUser ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {!isCurrentUser && (
+                      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                        {msg.sender?.image ? (
+                          <Image
+                            src={msg.sender.image}
+                            alt={msg.sender.name || "User"}
+                            width={32}
+                            height={32}
+                            className="rounded-full"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                            <span className="text-sm font-semibold text-gray-600">
+                              {(msg.sender?.name || "U")[0].toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <div
+                      className={`max-w-[60%] px-4 py-2 ${
+                        isCurrentUser
+                          ? "bg-[#0084FF] text-white rounded-3xl"
+                          : "bg-[#E4E6EB] dark:bg-gray-700 text-black dark:text-white rounded-3xl"
+                      }`}
+                    >
+                      <p className="break-words">{msg.content}</p>
+                      <p
+                        className={`text-[10px] mt-1 ${
+                          isCurrentUser ? "text-[#99c7ff]" : "text-gray-500"
+                        }`}
+                      >
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Message Input */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+                  placeholder="Type a message..."
+                  className="flex-1 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handleSend}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-500">
+            Select a conversation to start messaging
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

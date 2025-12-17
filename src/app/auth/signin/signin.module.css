@@ -1,0 +1,664 @@
+.glassCard {
+  background: rgba(30, 34, 54, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 32px;
+  border: 3px solid rgba(105, 38, 38, 0.486);
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 430px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 0 16px 4px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px #0a0a2a44;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input {
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #332929;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  outline: none;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.input:focus {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.submitButton {
+  padding: 0.9rem 1.2rem;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(90deg, #1e2afe 60%, #15f328 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(10, 13, 211);
+  transition: all 0.3s ease;
+}
+.submitButton:hover {
+  background: linear-gradient(90deg, #15f328 0%, #1e2afe 100%);
+  box-shadow: 0 4px 16px rgba(3, 245, 23, 0.767);
+}
+
+.error {
+  background: rgba(230, 7, 7, 0.12);
+  color: #ff3b3b;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(230, 7, 7, 0.08);
+}
+.success {
+  background: rgba(21, 243, 40, 0.12);
+  color: #15f328;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(21, 243, 40, 0.08);
+}
+
+.footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+.footerText {
+  color: #eaeaea;
+  font-size: 0.98rem;
+  margin-bottom: 0.5rem;
+}
+.linkButton {
+  background: none;
+  border: none;
+  color: #1e2afe;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+  margin-left: 0.2rem;
+  transition: color 0.2s;
+}
+.linkButton:hover {
+  color: #15f328;
+}
+/* Main container with animated gaming background */
+.container {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  gap: 1.5rem;
+  max-width: 460px;
+  border-radius: 50px;
+  margin: 0 auto;
+}
+
+/* Animated background particles */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gPGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4gPGcgZmlsbD0iIzEyMTIxMiIgZmlsbC1vcGFjaXR5PSIwLjEiPiA8Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyIi8+IDxjaXJjbGUgY3g9IjQwIiBjeT0iNDAiIHI9IjEuNSIvPiA8Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIxIi8+IDwvZz4gPC9nPiA8L3N2Zz4=");
+  animation: particleFloat 20s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Glowing orbs in background */
+.container::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(8, 42, 238, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(21, 243, 40, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(circle at 40% 40%, rgba(230, 7, 7, 0.2) 0%, transparent 50%);
+  animation: orbitalMove 15s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(-60px, -60px) rotate(360deg);
+  }
+}
+
+@keyframes orbitalMove {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(-20px, -20px) rotate(180deg);
+  }
+}
+
+/* Main card with glass morphism effect */
+.card {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: none;
+  border-radius: 20px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  box-shadow: none;
+  transition: all 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+/* Logo container and styling */
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  z-index: 100;
+  position: relative;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(78, 205, 196, 0.3),
+    0 0 40px rgba(78, 205, 196, 0.1);
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(78, 205, 196, 0.4),
+    0 0 60px rgba(78, 205, 196, 0.2);
+}
+
+/* Content wrapper without background */
+.contentWrapper {
+  padding: 3rem;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  margin: 2rem auto;
+}
+
+/* Enhanced title with gaming aesthetic */
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    45deg,
+    #ff6b6b,
+    #4ecdc4,
+    #45b7d1,
+    #96ceb4,
+    #ff6b6b
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+  letter-spacing: -1px;
+  position: relative;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #4ecdc4, transparent);
+  border-radius: 2px;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Stylized subtitle */
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+/* Error and success message styling */
+.error {
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.success {
+  padding: 1rem;
+  background: rgba(78, 205, 196, 0.1);
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 10px;
+  color: #4ecdc4;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Form container styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  z-index: 100;
+  position: relative;
+}
+
+/* Button container with better spacing */
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Enhanced OAuth buttons */
+.signInButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 100;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.signInButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.signInButton:hover::before {
+  left: 100%;
+}
+
+.signInButton:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.signInButton:active {
+  transform: translateY(0);
+}
+
+/* Discord button specific styling */
+.discordButton {
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  border-color: #5865f2;
+}
+
+.discordButton:hover {
+  background: linear-gradient(135deg, #4752c4 0%, #3c45a3 100%);
+  box-shadow: 0 10px 25px rgba(88, 101, 242, 0.3),
+    0 0 20px rgba(88, 101, 242, 0.2);
+}
+
+/* GitHub button specific styling */
+.githubButton {
+  background: linear-gradient(135deg, #24292e 0%, #1b1f23 100%);
+  border-color: #24292e;
+}
+
+.githubButton:hover {
+  background: linear-gradient(135deg, #1b1f23 0%, #14171a 100%);
+  box-shadow: 0 10px 25px rgba(36, 41, 46, 0.3), 0 0 20px rgba(36, 41, 46, 0.2);
+}
+
+/* Form elements styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.input {
+  padding: 1rem;
+  border-radius: 15px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 100;
+  cursor: text;
+}
+
+.input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #4ecdc4;
+  box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+
+/* Toggle links styling */
+.toggleLink {
+  color: #cd764e;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.toggleLink:hover {
+  color: #44a08d;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Error and success messages */
+.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+  padding: 1rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .card {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+    max-width: none;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+}
+
+.signInButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--border-hover);
+}
+
+.error {
+  color: var(--error);
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--error-background);
+}
+
+.backgroundAnimation {
+  animation-duration: 5s;
+}
+
+/* Divider styling for "or continue with" */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+  text-align: center;
+  position: relative;
+  z-index: 100;
+}
+
+.divider span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0 1.5rem;
+  background: var(--theme-bg-start, rgba(16, 23, 42, 0.95));
+  border-radius: 20px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+}
+
+/* Additional utility classes */
+.dividerText {
+  text-align: center;
+  margin: 2rem 0 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+.linkContainer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.linkText {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+}
+
+.linkTextNoMargin {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Footer styling */
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  z-index: 100;
+  position: relative;
+}
+
+.footerText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: #4ecdc4;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.25rem 0;
+}
+
+.linkButton::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #4ecdc4, #44a08d);
+  transition: width 0.3s ease;
+}
+
+.linkButton:hover {
+  color: #5fd4cd;
+  transform: translateY(-1px);
+}
+
+.linkButton:hover::after {
+  width: 100%;
+}

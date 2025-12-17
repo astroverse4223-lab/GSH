@@ -1,0 +1,138 @@
+.commentCard {
+  background-color: rgba(var(--theme-card-bg-rgb), 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(var(--theme-border-rgb), 0.12);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.commentCard:hover {
+  background-color: rgba(var(--theme-card-bg-rgb), 0.7);
+  transform: translateX(4px);
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--theme-text-primary);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: var(--theme-text-secondary);
+  margin: 0;
+}
+
+.commentContent {
+  color: var(--theme-text-primary);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.reactionsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.35rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.commentCard:hover .reactionsContainer {
+  opacity: 1;
+}
+
+.reactionButton {
+  background: none;
+  border: none;
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-text-secondary);
+  width: 2.5rem;
+  height: 2rem;
+  position: relative;
+  background-color: rgba(var(--theme-card-bg-rgb), 0.8);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.reactionButton:hover {
+  transform: scale(1.1);
+  background-color: rgba(var(--theme-primary-rgb), 0.1);
+  color: var(--theme-text-primary);
+}
+
+.reactionCount {
+  font-size: 0.875rem;
+  color: var(--theme-text-secondary);
+  margin-left: 0.25rem;
+}
+
+.reactionActive {
+  background-color: rgba(var(--theme-primary-rgb), 0.15);
+  color: var(--theme-primary);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  color: var(--theme-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.actionButton:hover {
+  color: var(--theme-primary);
+  background-color: rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.userImage {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--theme-primary-rgb), 0.3);
+  transition: all 0.3s ease;
+}
+
+.userImage:hover {
+  transform: scale(1.05);
+  border-color: rgba(var(--theme-primary-rgb), 0.6);
+  box-shadow: 0 0 10px rgba(var(--theme-primary-rgb), 0.2);
+}

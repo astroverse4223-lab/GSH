@@ -1,0 +1,119 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
+
+export async function POST(
+  request: Request,
+  { params }: { params: { postId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const { content, parentId } = await request.json();
+    if (!content?.trim()) {
+      return new NextResponse("Comment content is required", { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return new NextResponse("User not found", { status: 404 });
+    }
+
+    const { postId } = await params;
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return new NextResponse("Post not found", { status: 404 });
+    }
+
+    if (parentId) {
+      // This is a reply to another comment
+      const parentComment = await prisma.comment.findUnique({
+        where: { id: parentId },
+      });
+
+      if (!parentComment) {
+        return new NextResponse("Parent comment not found", { status: 404 });
+      }
+    }
+
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        user: { connect: { id: user.id } },
+        post: { connect: { id: post.id } },
+        parent: parentId ? { connect: { id: parentId } } : undefined,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id,
+          },
+          take: 1,
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+            likes: {
+              where: {
+                userId: user.id,
+              },
+              take: 1,
+            },
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            replies: true,
+          },
+        },
+      },
+    });
+
+    // Create notification for post owner if it's not their own comment
+    if (post.userId !== user.id) {
+      await prisma.notification.create({
+        data: {
+          type: "POST_COMMENT",
+          content: `${user.name || 'Someone'} commented on your post`,
+          userId: post.userId,
+          senderId: user.id,
+          postId: post.id,
+        },
+      });
+    }
+
+    return NextResponse.json({
+      ...comment,
+      liked: comment.likes.length > 0,
+      likes: undefined,
+    });
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    return new NextResponse("Error creating comment", { status: 500 });
+  }
+}

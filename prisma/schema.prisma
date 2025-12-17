@@ -1,0 +1,706 @@
+model AccountDeletionRequest {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  requestedAt  DateTime @default(now())
+  scheduledFor DateTime
+  reason       String?
+  status       String   @default("PENDING") // PENDING, CANCELLED, COMPLETED
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Media {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  url       String
+  type      String   // image, video, etc
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reportsReceived Report[] @relation("MediaReports")
+  createdAt DateTime @default(now())
+}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Level system removed
+
+model MarketplaceListing {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       Float
+  condition   String   // "NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"
+  category    String
+  status      String   @default("ACTIVE") // "ACTIVE", "SOLD", "CANCELLED"
+  
+  sellerId    String   @db.ObjectId
+  seller      User     @relation("Listings", fields: [sellerId], references: [id], onDelete: Cascade)
+  
+  images      MarketplaceImage[]
+  messages    Message[]
+  transactions MarketplaceTransaction[]
+  reports     Report[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("marketplaceListings")
+}
+
+model MarketplaceImage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  url       String
+  listingId String   @db.ObjectId
+  listing   MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@map("marketplaceImages")
+}
+
+model Stream {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  platform  String   // TWITCH or YOUTUBE
+  streamUrl String
+  title     String
+  game      String?
+  isLive    Boolean  @default(false)
+  startedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  viewCount Int      @default(0)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform])
+  @@map("streams")
+}
+
+
+  
+model PostReaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  emoji     String   // "🔥", "GG", "💀", "😂"
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@map("postReactions")
+}
+
+model CommentReaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  emoji     String   // "🔥", "GG", "💀", "😂"
+  userId    String   @db.ObjectId
+  commentId String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+  @@map("commentReactions")
+}
+
+model User {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  bannerImage   String?
+  wallpaper     String?
+  bio           String?
+  password      String?
+  musicUrl      String?      // Spotify playlist URL for profile music
+  accounts      Account[]
+  sessions      Session[]
+  createdAt    DateTime?  @default(now())
+  updatedAt    DateTime?  @updatedAt
+  lastSeen     DateTime?  @default(now())
+  posts         Post[]
+  comments      Comment[]
+  commentReactions CommentReaction[]
+  groups        GroupMember[]
+  reactions     PostReaction[]
+  gameHighScores GameHighScore[]
+  createdGroups Group[]
+  gamePlaying   GamePlayer[]
+  
+  // Friend relationships
+  sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
+  friends               Friend[]        @relation("UserFriends")
+  friendsOf            Friend[]        @relation("FriendsOf")
+  // Marketplace listings
+  listings             MarketplaceListing[]  @relation("Listings")
+  // Message relationships
+  sentMessages     Message[]    @relation("MessageSender")
+  receivedMessages Message[]    @relation("MessageReceiver")
+  conversations    Conversation[] @relation(fields: [conversationIds], references: [id])
+  conversationIds  String[]      @db.ObjectId
+  // Notification relationships
+  receivedNotifications Notification[] @relation("NotificationRecipient")
+  sentNotifications     Notification[] @relation("NotificationSender")
+  pushSubscription      String?        // Push notification subscription data (JSON)
+  
+  // Follow relationships
+  followers    Follows[] @relation("Following")
+  following    Follows[] @relation("Followers")
+  
+  // Streaming relationships
+  streams     Stream[]
+  twitchUsername String?
+  youtubeChannelId String?
+  
+  // Storage tracking
+  storageUsed BigInt @default(0) // Storage used in bytes
+  
+  // XP and Level System
+  xp          Int @default(0)
+  level       Int @default(1)
+  lastLoginDate DateTime?
+  loginStreak   Int @default(0)
+  totalLogins   Int @default(0)
+  
+  // Admin/Moderation fields
+  banned        Boolean   @default(false)
+  banReason     String?
+  bannedAt      DateTime?
+  banExpiresAt  DateTime?
+  role          String    @default("USER") // USER, MODERATOR, ADMIN
+  
+  // Admin actions performed by this user (if they're an admin)
+  adminActions  AdminAction[]
+  
+  // Monetization relationships
+  subscription          Subscription?
+  boosts                Boost[]
+  transactions          Transaction[]
+  marketplaceBuyer      MarketplaceTransaction[] @relation("MarketplaceBuyer")
+  marketplaceSeller     MarketplaceTransaction[] @relation("MarketplaceSeller")
+
+  // Privacy & Account Management relationships
+  privacySettings       UserPrivacySettings?
+  blockingUsers         BlockedUser[]            @relation("BlockingUsers")
+  blockedByUsers        BlockedUser[]            @relation("BlockedByUsers")
+  reportsSent           Report[]                 @relation("ReportsSent")
+  reportsReceived       Report[]                 @relation("ReportsReceived")
+  dataExportRequests    DataExportRequest[]
+  accountDeletionRequests AccountDeletionRequest[]
+  media                Media[]
+
+  // Story relationships
+  stories              Story[]
+  storyViews           StoryView[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+
+  @@map("passwordResetTokens")
+}
+
+model Follows {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
+  followingId String   @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  follower    User     @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Post {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  reactions PostReaction[]
+  image     String?
+  video     String?
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?  @updatedAt
+  userId    String    @db.ObjectId
+  groupId   String?   @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group?    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  notifications Notification[]
+  boosts    Boost[]
+  reports   Report[]
+}
+
+model Comment {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  content      String
+  createdAt    DateTime?      @default(now())
+  updatedAt    DateTime?      @updatedAt
+  postId       String        @db.ObjectId
+  userId       String        @db.ObjectId
+  parentId     String?       @db.ObjectId
+  post         Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent       Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies      Comment[]     @relation("CommentReplies")
+  reactions    CommentReaction[]
+  reports      Report[]
+}
+
+
+model Group {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  image       String?
+  category    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ownerId     String        @db.ObjectId
+  owner       User          @relation(fields: [ownerId], references: [id])
+  members     GroupMember[]
+  posts       Post[]
+  boosts      Boost[]
+}
+
+model GroupMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  groupId   String   @db.ObjectId
+  userId    String   @db.ObjectId
+  role      String   @default("MEMBER") // OWNER, ADMIN, MEMBER
+  joinedAt  DateTime @default(now())
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+}
+
+model Game {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String    @unique
+  steamId       String?   @unique
+  imageUrl      String?
+  coverImageUrl String?
+  description   String?
+  releaseDate   DateTime?
+  publisher     String?
+  developer     String?
+  playerCount   Int       @default(0)
+  lastUpdated   DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // For tracking when users start/stop playing
+  activePlayers GamePlayer[]
+  notifications Notification[]
+
+  @@map("games")
+}
+
+model GamePlayer {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  gameId    String   @db.ObjectId
+  userId    String   @db.ObjectId
+  startTime DateTime @default(now())
+  endTime   DateTime?
+
+  game      Game     @relation(fields: [gameId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("game_players")
+}
+
+model FriendRequest {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId    String   @db.ObjectId
+  receiverId  String   @db.ObjectId
+  status      String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  sender      User     @relation("SentFriendRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver    User     @relation("ReceivedFriendRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@map("friend_requests")
+}
+
+model Friend {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  friendId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+  
+  user      User     @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend    User     @relation("FriendsOf", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@map("friends")
+}
+
+model Conversation {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  messages      Message[]
+  participants  User[]    @relation(fields: [participantIds], references: [id])
+  participantIds String[] @db.ObjectId
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  content        String
+  fileUrl        String?     // URL to uploaded file
+  fileName       String?     // Original file name
+  fileType       String?     // MIME type of file
+  fileSize       Int?        // File size in bytes
+  createdAt      DateTime    @default(now())
+  senderId       String      @db.ObjectId
+  receiverId     String      @db.ObjectId
+  conversationId String      @db.ObjectId
+  listingId      String?     @db.ObjectId
+  sender         User        @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver       User        @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  listing        MarketplaceListing? @relation(fields: [listingId], references: [id])
+  read           Boolean     @default(false)
+  notifications  Notification[]
+
+  @@map("messages")
+}
+
+model Notification {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String   // MESSAGE, POST_LIKE, POST_COMMENT, FRIEND_REQUEST, GAME_PLAYING
+  content     String
+  link        String?  // URL to navigate to when clicked
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  // Who the notification is for
+  userId      String   @db.ObjectId
+  user        User     @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Who triggered the notification
+  senderId    String   @db.ObjectId
+  sender      User     @relation("NotificationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  
+  // Optional related content
+  postId      String?  @db.ObjectId
+  post        Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  messageId   String?  @db.ObjectId
+  message     Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  gameId      String?  @db.ObjectId
+  game        Game?    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model GameHighScore {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  game      String   // "snake", "tetris", etc.
+  score     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, game])
+  @@map("game_high_scores")
+}
+
+// Monetization Models
+
+model Subscription {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @unique @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId   String?  @unique
+  stripeSubscriptionId String? @unique
+  status             String   // active, canceled, past_due, unpaid, incomplete
+  tier               String   @default("free") // free, premium, pro
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean  @default(false)
+  trialEnd           DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("subscriptions")
+}
+
+model Boost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?  @db.ObjectId
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  groupId   String?  @db.ObjectId
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  type      String   // POST_BOOST, PROFILE_BOOST, GROUP_BOOST
+  duration  Int      // hours
+  amount    Float    // USD amount paid
+  status    String   @default("active") // active, expired, canceled
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("boosts")
+}
+
+model Transaction {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            String   // SUBSCRIPTION, BOOST, MARKETPLACE_FEE
+  amount          Float    // USD amount
+  stripePaymentId String?
+  status          String   // pending, completed, failed, refunded
+  description     String?
+  metadata        Json?    // Additional data (postId, listingId, etc.)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+model MarketplaceTransaction {
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  listingId       String             @db.ObjectId
+  listing         MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId         String             @db.ObjectId
+  buyer           User               @relation("MarketplaceBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId        String             @db.ObjectId
+  seller          User               @relation("MarketplaceSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  amount          Float              // Total amount paid
+  platformFee     Float              // Fee taken by platform
+  sellerAmount    Float              // Amount seller receives
+  stripePaymentId String?
+  status          String             // pending, completed, canceled, disputed
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@map("marketplace_transactions")
+}
+
+// Privacy & Account Management Models
+
+model UserPrivacySettings {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String   @unique @db.ObjectId
+  profileVisibility     String   @default("PUBLIC")  // PUBLIC, FRIENDS, PRIVATE
+  showEmail             Boolean  @default(false)
+  showLastSeen          Boolean  @default(true)
+  allowFriendRequests   Boolean  @default(true)
+  allowMessages         Boolean  @default(true)
+  allowGroupInvites     Boolean  @default(true)
+  marketplaceNotifications Boolean @default(true)
+  postNotifications     Boolean  @default(true)
+  friendNotifications   Boolean  @default(true)
+  emailNotifications    Boolean  @default(true)
+  pushNotifications     Boolean  @default(true)
+  twoFactorEnabled      Boolean  @default(false)
+  dataExportRequested   Boolean  @default(false)
+  accountDeletionRequested Boolean @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_privacy_settings")
+}
+
+model BlockedUser {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  blockerId   String   @db.ObjectId
+  blockedId   String   @db.ObjectId
+  reason      String?  // Optional reason for blocking
+  createdAt   DateTime @default(now())
+  
+  blocker     User     @relation("BlockingUsers", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked     User     @relation("BlockedByUsers", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@map("blocked_users")
+}
+
+model Report {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  reporterId   String   @db.ObjectId
+  reportedUserId String? @db.ObjectId
+  reportedPostId String? @db.ObjectId
+  reportedCommentId String? @db.ObjectId
+  reportedListingId String? @db.ObjectId
+  type         String   // USER, POST, COMMENT, LISTING
+  category     String   // SPAM, HARASSMENT, INAPPROPRIATE_CONTENT, SCAM, OTHER
+  description  String
+  status       String   @default("PENDING") // PENDING, REVIEWED, RESOLVED, DISMISSED
+  adminNotes   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  reporter       User      @relation("ReportsSent", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser   User?     @relation("ReportsReceived", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reportedPost   Post?     @relation(fields: [reportedPostId], references: [id], onDelete: Cascade)
+  reportedComment Comment? @relation(fields: [reportedCommentId], references: [id], onDelete: Cascade)
+  reportedListing MarketplaceListing? @relation(fields: [reportedListingId], references: [id], onDelete: Cascade)
+  reportedMediaId String? @db.ObjectId
+  reportedMedia   Media? @relation("MediaReports", fields: [reportedMediaId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
+
+model DataExportRequest {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  requestedAt     DateTime @default(now())
+  processedAt     DateTime?
+  downloadUrl     String?
+  expiresAt       DateTime?
+  status          String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, EXPIRED
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("data_export_requests")
+}
+
+model AdminAction {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  adminId      String   @db.ObjectId
+  action       String   // BAN_USER, UNBAN_USER, DELETE_POST, etc.
+  targetUserId String?  @db.ObjectId
+  targetPostId String?  @db.ObjectId
+  reason       String
+  metadata     Json     // Additional data about the action
+  createdAt    DateTime @default(now())
+  
+  admin        User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  
+  @@map("admin_actions")
+}
+
+
+
+
+
+model Announcement {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  content        String
+  type           String   @default("GENERAL") // GENERAL, MAINTENANCE, UPDATE, EMERGENCY
+  priority       Int      @default(0)         // 0 = normal, 1 = important, 2 = critical
+  startDate      DateTime @default(now())
+  endDate        DateTime?
+  active         Boolean  @default(true)
+  viewCount      Int      @default(0)
+  targetAudience String[] @default(["ALL"])   // ALL, FREE_USERS, PRO_USERS
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model PlatformSettings {
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  siteName             String   @default("Gamer Social Site")
+  registrationEnabled  Boolean  @default(true)
+  maintenanceMode      Boolean  @default(false)
+  maintenanceMessage   String?
+  maxUploadSizeMB      Int      @default(50)
+  maxPostLength        Int      @default(5000)
+  maxImagesPerPost     Int      @default(10)
+  userLimits          Json     @default("{\"maxFriends\":1000,\"maxGroups\":50,\"maxPosts\":5000}")
+  proFeatures         Json     @default("{\"streaming\":true,\"customization\":true,\"marketplace\":true,\"analytics\":true}")
+  monetization        Json     @default("{\"proSubscriptionPrice\":9.99,\"marketplaceFeePercent\":5}")
+  moderation          Json     @default("{\"autoModerationEnabled\":true,\"requirePostApproval\":false,\"requireListingApproval\":true}")
+  security            Json     @default("{\"requireEmailVerification\":true,\"maxLoginAttempts\":5,\"passwordMinLength\":8}")
+  features            Json     @default("{\"marketplace\":true,\"groups\":true,\"privateMessages\":true,\"stories\":true,\"streaming\":true}")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
+model Story {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  content   String
+  type      String   @default("text") // text, image, gaming_status, achievement
+  gameTitle String?  // For gaming status stories
+  status    String?  // playing, completed, streaming, looking_for_team
+  mediaUrl  String?  // For image/video stories
+  createdAt DateTime @default(now())
+  expiresAt DateTime // 24 hours from creation
+  
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views     StoryView[]
+  
+  @@map("stories")
+}
+
+model StoryView {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  storyId  String   @db.ObjectId
+  viewedAt DateTime @default(now())
+  
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story    Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, storyId])
+  @@map("story_views")
+}

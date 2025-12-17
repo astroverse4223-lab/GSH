@@ -1,0 +1,130 @@
+@keyframes rgbButtonGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5), 0 0 30px rgba(255, 0, 0, 0.3),
+      inset 0 0 10px rgba(255, 0, 0, 0.4);
+    border-color: #ff0000;
+  }
+  33% {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.3),
+      inset 0 0 10px rgba(0, 255, 0, 0.4);
+    border-color: #00ff00;
+  }
+  66% {
+    box-shadow: 0 0 15px rgba(0, 0, 255, 0.5), 0 0 30px rgba(0, 0, 255, 0.3),
+      inset 0 0 10px rgba(0, 0, 255, 0.4);
+    border-color: #0000ff;
+  }
+}
+
+@keyframes gradientBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.rgbButton {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--theme-text-on-primary);
+  background: var(--theme-card-bg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.rgbButton::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientBorder 4s linear infinite;
+  border-radius: 0.6rem;
+  opacity: 0.7;
+}
+
+.rgbButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  animation: rgbButtonGlow 4s linear infinite;
+}
+
+.rgbButton:hover::before {
+  animation: gradientBorder 2s linear infinite;
+  opacity: 1;
+}
+
+/* Button Variants */
+.primary {
+  background: rgba(var(--theme-primary-rgb), 0.9);
+}
+
+.secondary {
+  background: rgba(var(--theme-secondary-rgb), 0.9);
+}
+
+.accent {
+  background: rgba(var(--theme-accent-rgb), 0.9);
+}
+
+/* Size Variants */
+.sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.md {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* State Variants */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Special Effects */
+.rgbButton:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.pulse {
+  animation: rgbButtonGlow 4s linear infinite;
+}
+
+/* Ghost Variant */
+.ghost {
+  background: transparent;
+  border: 2px solid transparent;
+}
+
+.ghost::before {
+  opacity: 0.3;
+}
+
+.ghost:hover::before {
+  opacity: 0.5;
+}

@@ -1,0 +1,144 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { v2 as cloudinary } from "cloudinary";
+import { UploadApiOptions } from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Constants
+const ALLOWED_VIDEO_FORMATS = ['video/mp4', 'video/webm', 'video/quicktime'];
+
+// Video file signature validation
+const validateVideoFile = async (buffer: Buffer): Promise<boolean> => {
+  try {
+    // Check for MP4 signature (starts with ftyp)
+    const isMp4 = buffer.includes(Buffer.from('ftyp'));
+    // Check for WebM signature (starts with 1A 45 DFA3)
+    const isWebm = buffer.slice(0, 4).equals(Buffer.from([0x1A, 0x45, 0xDF, 0xA3]));
+    // Check for QuickTime/MOV signature (starts with moov or mdat)
+    const isMov = buffer.includes(Buffer.from('moov')) || buffer.includes(Buffer.from('mdat'));
+
+    return isMp4 || isWebm || isMov;
+  } catch (error) {
+    console.error('Error validating video file:', error);
+    return false;
+  }
+};
+
+// Types
+interface CloudinaryError {
+  http_code?: number;
+  message?: string;
+}
+
+// Upload handler
+export async function POST(request: Request): Promise<Response> {
+  try {
+    // Check user authentication
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Get file from form data
+    const formData = await request.formData();
+    const uploadedFile = formData.get("file") as File;
+    
+    if (!uploadedFile) {
+      return NextResponse.json(
+        { error: "No file uploaded" },
+        { status: 400 }
+      );
+    }
+
+    // Check if it's a video file and validate format
+    const isVideo = uploadedFile.type.startsWith("video/");
+    if (isVideo && !ALLOWED_VIDEO_FORMATS.includes(uploadedFile.type)) {
+      return NextResponse.json(
+        { error: "Please upload MP4, WebM, or MOV files only" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      // Convert file to buffer
+      const arrayBuffer = await uploadedFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // For video files, perform additional validation
+      if (isVideo) {
+        const isValidVideo = await validateVideoFile(buffer);
+        if (!isValidVideo) {
+          return NextResponse.json(
+            { error: "Invalid video file format" },
+            { status: 400 }
+          );
+        }
+      }
+
+      // Convert to data URI for upload
+      const dataURI = `data:${uploadedFile.type};base64,${buffer.toString("base64")}`;
+
+      // Configure upload options
+      const uploadOptions: UploadApiOptions = {
+        folder: "gamer-social-hub",
+        resource_type: isVideo ? "video" : "auto",
+        timeout: isVideo ? 150000 : undefined, // 2.5 minutes timeout for video
+        eager: isVideo ? [
+          { streaming_profile: "full_hd", format: "m3u8" },
+          { quality: "auto", format: "mp4" }
+        ] : undefined,
+        eager_async: isVideo,
+        format: isVideo ? "mp4" : undefined
+      };
+
+      try {
+        // Upload to Cloudinary
+        const uploadResponse = await cloudinary.uploader.upload(dataURI, uploadOptions);
+        return NextResponse.json({
+          url: uploadResponse.secure_url,
+          complete: true
+        });
+      } catch (uploadError) {
+        console.error("Upload error:", uploadError);
+        const error = uploadError as CloudinaryError;
+        
+        // Handle specific error cases
+        if (error.http_code === 413) {
+          return NextResponse.json({
+            error: "File size too large. Please upload a smaller file."
+          }, { status: 413 });
+        }
+        
+        if (error.http_code === 400 && isVideo) {
+          return NextResponse.json({
+            error: "Video format not supported. Please ensure your video is a valid MP4, WebM, or MOV file and try re-encoding it with H.264 codec."
+          }, { status: 400 });
+        }
+
+        return NextResponse.json({
+          error: "Failed to upload file"
+        }, { status: 500 });
+      }
+    } catch (processError) {
+      console.error("File processing error:", processError);
+      return NextResponse.json({
+        error: "Failed to process the file"
+      }, { status: 500 });
+    }
+  } catch (error) {
+    console.error("Server error:", error);
+    return NextResponse.json({
+      error: "Internal server error"
+    }, { status: 500 });
+  }
+}

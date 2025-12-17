@@ -1,0 +1,16 @@
+.card {
+  background: var(--theme-card-bg);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--theme-card-border);
+  transition: all 0.3s ease-in-out;
+  box-shadow: none;
+}
+
+.card:hover {
+  border-color: var(--theme-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--theme-primary),
+    0 0 10px rgba(var(--theme-primary-rgb), 0.2),
+    0 0 20px rgba(var(--theme-primary-rgb), 0.1);
+}

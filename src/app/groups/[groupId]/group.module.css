@@ -1,0 +1,420 @@
+.groupPage {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--theme-primary) 15%, var(--theme-bg-start)),
+    color-mix(in srgb, var(--theme-primary) 10%, var(--theme-bg-middle)),
+    color-mix(in srgb, var(--theme-primary) 5%, var(--theme-bg-end))
+  );
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(var(--theme-primary-rgb), 0.2);
+}
+
+.bannerImage {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.banner:hover .bannerImage {
+  transform: scale(1.05);
+}
+
+.groupContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(var(--theme-bg-end-rgb), 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.groupInfo {
+  flex: 1;
+}
+
+.groupName {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    120deg,
+    var(--theme-primary),
+    var(--theme-secondary)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.groupDescription {
+  color: var(--theme-text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.groupMeta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: var(--theme-text-secondary);
+  font-size: 0.9rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.metaIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--theme-primary);
+}
+
+@keyframes rgbButtonGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5), 0 0 30px rgba(255, 0, 0, 0.3),
+      inset 0 0 10px rgba(255, 0, 0, 0.4);
+    border-color: #ff0000;
+  }
+  33% {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.3),
+      inset 0 0 10px rgba(0, 255, 0, 0.4);
+    border-color: #00ff00;
+  }
+  66% {
+    box-shadow: 0 0 15px rgba(0, 0, 255, 0.5), 0 0 30px rgba(0, 0, 255, 0.3),
+      inset 0 0 10px rgba(0, 0, 255, 0.4);
+    border-color: #0000ff;
+  }
+}
+
+@keyframes gradientBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.rgbButton {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--theme-text-on-primary);
+  background: var(--theme-card-bg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.rgbButton::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientBorder 4s linear infinite;
+  border-radius: 0.6rem;
+  opacity: 0.7;
+}
+
+.rgbButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  animation: rgbButtonGlow 4s linear infinite;
+}
+
+.rgbButton:hover::before {
+  animation: gradientBorder 2s linear infinite;
+  opacity: 1;
+}
+
+.joinButton,
+.createPostButton,
+.postButton,
+.actionButton {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--theme-text-on-primary);
+  background: var(--theme-card-bg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.joinButton::before,
+.createPostButton::before,
+.postButton::before,
+.actionButton::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientBorder 4s linear infinite;
+  border-radius: 0.6rem;
+  opacity: 0.7;
+}
+
+.joinButton:hover,
+.createPostButton:hover,
+.postButton:hover,
+.actionButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  animation: rgbButtonGlow 4s linear infinite;
+}
+
+.joinButton:hover::before,
+.createPostButton:hover::before,
+.postButton:hover::before,
+.actionButton:hover::before {
+  animation: gradientBorder 2s linear infinite;
+  opacity: 1;
+}
+
+.joinButton {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--theme-text-on-primary);
+  background: var(--theme-card-bg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.joinButton::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+  background-size: 400% 400%;
+  z-index: -1;
+  animation: gradientBorder 4s linear infinite;
+  border-radius: 0.6rem;
+  opacity: 0.7;
+}
+
+.joinButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  animation: rgbButtonGlow 4s linear infinite;
+}
+
+.joinButton:hover::before {
+  animation: gradientBorder 2s linear infinite;
+  opacity: 1;
+}
+
+.joinButton:hover::after {
+  transform: translateX(100%);
+}
+
+.contentLayout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .contentLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.postSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.postComposer {
+  background: rgba(var(--theme-bg-end-rgb), 0.8);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.postComposer:focus-within {
+  border-color: rgba(var(--theme-primary-rgb), 0.3);
+  box-shadow: 0 4px 25px rgba(var(--theme-primary-rgb), 0.2);
+  transform: translateY(-2px);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  background: rgba(var(--theme-bg-start-rgb), 0.5);
+  color: var(--theme-text-primary);
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: rgba(var(--theme-primary-rgb), 0.5);
+  background: rgba(var(--theme-bg-start-rgb), 0.7);
+}
+
+.textarea::placeholder {
+  color: var(--theme-text-secondary);
+  opacity: 0.7;
+}
+
+.postActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.imageUploadContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 1rem;
+}
+
+.uploadProgress {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.removeImageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: rgba(var(--theme-bg-start-rgb), 0.5);
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.2);
+  border-radius: 50%;
+  color: var(--theme-text-secondary);
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.removeImageButton:hover {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.3);
+  color: rgba(255, 0, 0, 0.8);
+}
+
+.imageInput:focus {
+  outline: none;
+  border-color: rgba(var(--theme-primary-rgb), 0.5);
+  background: rgba(var(--theme-bg-start-rgb), 0.7);
+}
+
+.imageInput::placeholder {
+  color: var(--theme-text-secondary);
+  opacity: 0.7;
+}
+
+.membersList {
+  background: rgba(var(--theme-bg-end-rgb), 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
+  padding: 1.5rem;
+  position: sticky;
+  top: 2rem;
+}
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.memberCard:hover {
+  background: rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.memberImage {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.memberImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.memberName {
+  font-weight: 500;
+  color: var(--theme-text-primary);
+}

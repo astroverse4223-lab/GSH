@@ -1,0 +1,185 @@
+.subscriptionPlans {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-accent)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.header p {
+  font-size: 1.125rem;
+  color: var(--theme-textSecondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+.planCard {
+  position: relative;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: var(--theme-cardBg);
+  border: 2px solid var(--theme-border);
+  transition: all 0.3s ease;
+}
+
+.planCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--theme-primary);
+}
+
+.planCard.current {
+  border-color: var(--theme-accent);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--theme-accent-rgb), 0.1) 0%,
+    var(--theme-cardBg) 100%
+  );
+}
+
+.planCard.popular {
+  border-color: var(--theme-primary);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--theme-primary-rgb), 0.1) 0%,
+    var(--theme-cardBg) 100%
+  );
+  transform: scale(1.05);
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-secondary)
+  );
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.planHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.planHeader h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--theme-text);
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--theme-primary);
+}
+
+.period {
+  font-size: 1rem;
+  color: var(--theme-textSecondary);
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.features li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.3);
+  color: var(--theme-text);
+  position: relative;
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.features li:last-child {
+  border-bottom: none;
+}
+
+.currentPlan {
+  background: linear-gradient(
+    135deg,
+    var(--theme-accent),
+    var(--theme-secondary)
+  );
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.managePlan {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .subscriptionPlans {
+    padding: 1rem;
+  }
+
+  .header h2 {
+    font-size: 2rem;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .planCard.popular {
+    transform: none;
+  }
+
+  .planCard {
+    padding: 1.5rem;
+  }
+}

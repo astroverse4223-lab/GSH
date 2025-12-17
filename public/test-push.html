@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Push Notification Test</title>
+  </head>
+  <body>
+    <h1>Push Notification Debug</h1>
+    <p><strong>Browser Detected:</strong> <span id="browser-info"></span></p>
+    <p>
+      <strong>Note:</strong> If using Chrome and getting 404 errors, try Firefox
+      for better compatibility with web push notifications.
+    </p>
+    <button id="subscribe">Subscribe to Push Notifications</button>
+    <button id="unsubscribe">Unsubscribe</button>
+    <button id="test">Test Push Notification</button>
+    <div id="status"></div>
+    <pre id="subscription-details"></pre>
+
+    <script>
+      const vapidPublicKey =
+        "BJCSEsjnJF5lxM9Oqv7-M4z4Poy8DAU-F80SLjXqkme_VvVdBajn_-J16EYm0i5G8iaDJOj4baDKCwhpCckEFQw";
+      const status = document.getElementById("status");
+      const subDetails = document.getElementById("subscription-details");
+
+      // Detect browser
+      const browserInfo = document.getElementById("browser-info");
+      const userAgent = navigator.userAgent;
+      let browser = "Unknown";
+      if (userAgent.includes("Chrome") && !userAgent.includes("Edg"))
+        browser = "Chrome (may have FCM compatibility issues)";
+      else if (userAgent.includes("Firefox"))
+        browser = "Firefox (recommended for web push)";
+      else if (userAgent.includes("Safari")) browser = "Safari";
+      else if (userAgent.includes("Edg")) browser = "Edge";
+      browserInfo.textContent = browser;
+
+      // Convert VAPID key
+      function urlBase64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+        const base64 = (base64String + padding)
+          .replace(/-/g, "+")
+          .replace(/_/g, "/");
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
+
+      // Check service worker support with better mobile handling
+      if ("serviceWorker" in navigator && "PushManager" in window) {
+        status.innerHTML += "Service Worker and Push supported!<br>";
+      } else {
+        status.innerHTML += "Service Worker or Push not supported!<br>";
+
+        // Add mobile-specific guidance
+        const userAgent = navigator.userAgent.toLowerCase();
+        if (
+          userAgent.includes("mobile") ||
+          userAgent.includes("android") ||
+          userAgent.includes("iphone")
+        ) {
+          if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
+            status.innerHTML +=
+              '<div style="background: #f8d7da; padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #dc3545;"><strong>📱 iOS Device Detected</strong><br><strong>Push notifications are NOT supported on iOS devices</strong> (iPhone/iPad), regardless of browser. This is an Apple/iOS limitation, not our app.<br><br><strong>Alternatives:</strong><br>• Use a desktop computer<br>• Use an Android device<br>• Enable email notifications instead</div>';
+          } else if (userAgent.includes("android")) {
+            status.innerHTML +=
+              '<div style="background: #d4edda; padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #28a745;"><strong>📱 Android Device Detected</strong><br>Push notifications should work on Android Chrome!<br>Make sure you\'re using Chrome browser and have notifications enabled.</div>';
+          } else {
+            status.innerHTML +=
+              '<div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #ffc107;"><strong>📱 Mobile Device Detected</strong><br>Push notification support varies by device and browser:<br>• iOS: NOT supported<br>• Android Chrome: Supported<br>• Other mobile browsers: Limited support</div>';
+          }
+        }
+      }
+
+      // Check Notification API specifically
+      if ("Notification" in window) {
+        status.innerHTML += "Notification API supported!<br>";
+      } else {
+        status.innerHTML += "Notification API NOT supported!<br>";
+      }
+
+      // Register service worker
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          status.innerHTML += "Service Worker registered!<br>";
+
+          document.getElementById("subscribe").onclick = async () => {
+            try {
+              // Check if Notification API exists
+              if (!("Notification" in window)) {
+                status.innerHTML += "Error: Notification API not available<br>";
+                return;
+              }
+
+              // Clear any existing subscription first
+              const existingSubscription =
+                await registration.pushManager.getSubscription();
+              if (existingSubscription) {
+                status.innerHTML +=
+                  "Unsubscribing from previous subscription...<br>";
+                await existingSubscription.unsubscribe();
+                status.innerHTML += "Previous subscription cleared!<br>";
+              }
+
+              // For older browsers or mobile Safari
+              let permission;
+              if (Notification.requestPermission.length) {
+                // Old callback-based API
+                permission = await new Promise((resolve) => {
+                  Notification.requestPermission(resolve);
+                });
+              } else {
+                // New Promise-based API
+                permission = await Notification.requestPermission();
+              }
+
+              status.innerHTML += `Permission: ${permission}<br>`;
+
+              if (permission === "granted") {
+                const subscription = await registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+                });
+
+                status.innerHTML += "Subscribed to push notifications!<br>";
+                subDetails.textContent = JSON.stringify(subscription, null, 2);
+
+                // Send to server with test mode header
+                const response = await fetch("/api/notifications/subscribe", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-test-mode": "true",
+                  },
+                  body: JSON.stringify(subscription),
+                });
+
+                const result = await response.text();
+                status.innerHTML += `Server response: ${result}<br>`;
+              }
+            } catch (error) {
+              status.innerHTML += `Error: ${error.message}<br>`;
+            }
+          };
+
+          document.getElementById("unsubscribe").onclick = async () => {
+            try {
+              const subscription =
+                await registration.pushManager.getSubscription();
+              if (subscription) {
+                await subscription.unsubscribe();
+                status.innerHTML +=
+                  "Successfully unsubscribed from push notifications!<br>";
+                subDetails.textContent = "No active subscription";
+              } else {
+                status.innerHTML += "No active subscription found.<br>";
+              }
+            } catch (error) {
+              status.innerHTML += `Unsubscribe error: ${error.message}<br>`;
+            }
+          };
+
+          document.getElementById("test").onclick = async () => {
+            try {
+              // Check if pushManager exists first
+              if (!registration.pushManager) {
+                status.innerHTML +=
+                  "Error: Push Manager not available on this device.<br>";
+                return;
+              }
+
+              // Get current subscription
+              const subscription =
+                await registration.pushManager.getSubscription();
+              if (!subscription) {
+                status.innerHTML +=
+                  "Error: No active subscription found. Please subscribe first.<br>";
+                return;
+              }
+
+              const response = await fetch("/api/push/test", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subscription }),
+              });
+
+              const result = await response.text();
+              status.innerHTML += `Test notification response: ${result}<br>`;
+            } catch (error) {
+              status.innerHTML += `Test error: ${error.message}<br>`;
+            }
+          };
+        })
+        .catch((error) => {
+          status.innerHTML += `Service Worker registration failed: ${error}<br>`;
+        });
+    </script>
+  </body>
+</html>

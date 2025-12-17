@@ -1,0 +1,62 @@
+/* 
+  Comprehensive Responsive Breakpoints
+  
+  Device Reference:
+  - Mobile: 320px - 480px
+  - Large Mobile: 481px - 640px  
+  - Small Tablet: 641px - 768px
+  - iPad Mini: 768px × 1024px
+  - iPad Air: 820px × 1180px
+  - iPad Pro: 1024px × 1366px
+  - Surface Pro 7: 912px × 1368px
+  - Asus Zenbook Fold: 1024px × 1536px
+  - Nest Hub: 1024px × 600px
+  - Desktop: 1200px+
+  - Large Desktop: 1400px+
+*/
+
+:root {
+  /* Breakpoint Variables */
+  --mobile-sm: 320px;
+  --mobile-md: 480px;
+  --mobile-lg: 640px;
+  --tablet-sm: 768px;
+  --tablet-md: 820px;
+  --tablet-lg: 912px;
+  --tablet-xl: 1024px;
+  --desktop-sm: 1200px;
+  --desktop-md: 1400px;
+  --desktop-lg: 1600px;
+  --desktop-xl: 1920px;
+}
+
+/* Standard Media Query Mixins (for reference) */
+/*
+  Mobile First Approach:
+  
+  @media (min-width: 320px) { Mobile Small }
+  @media (min-width: 480px) { Mobile Medium }
+  @media (min-width: 640px) { Mobile Large }
+  @media (min-width: 768px) { Tablet Small - iPad Mini Portrait }
+  @media (min-width: 820px) { Tablet Medium - iPad Air Portrait }
+  @media (min-width: 912px) { Tablet Large - Surface Pro Portrait }
+  @media (min-width: 1024px) { Tablet XL - iPad Landscape, Nest Hub }
+  @media (min-width: 1200px) { Desktop Small }
+  @media (min-width: 1400px) { Desktop Medium }
+  @media (min-width: 1600px) { Desktop Large }
+  @media (min-width: 1920px) { Desktop XL }
+  
+  Desktop First Approach:
+  
+  @media (max-width: 1919px) { Below Desktop XL }
+  @media (max-width: 1599px) { Below Desktop Large }
+  @media (max-width: 1399px) { Below Desktop Medium }
+  @media (max-width: 1199px) { Below Desktop Small }
+  @media (max-width: 1023px) { Below Tablet XL }
+  @media (max-width: 911px) { Below Tablet Large }
+  @media (max-width: 819px) { Below Tablet Medium }
+  @media (max-width: 767px) { Below Tablet Small }
+  @media (max-width: 639px) { Below Mobile Large }
+  @media (max-width: 479px) { Below Mobile Medium }
+  @media (max-width: 319px) { Below Mobile Small }
+*/

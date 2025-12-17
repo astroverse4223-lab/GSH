@@ -1,0 +1,30 @@
+node_modules
+# Keep environment variables out of version control
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production.backup
+
+# Google Cloud Service Account Key
+gcs-key.json
+*.json.key
+service-account*.json
+
+.vercel
+
+# Build outputs
+.next
+out
+dist
+*.js.map
+*.bak
+*.backup
+*.old
+*.tmp
+
+# Sensitive files
+temp-key.txt
+gcs-key.json
+*.key

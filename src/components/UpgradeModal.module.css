@@ -1,0 +1,239 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalContent {
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.2);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-accent)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--theme-textSecondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(var(--theme-border-rgb), 0.2);
+  color: var(--theme-text);
+}
+
+.body {
+  padding: 1.5rem;
+}
+
+.limitationInfo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.limitation {
+  font-size: 1.125rem;
+  color: var(--theme-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.description {
+  color: var(--theme-textSecondary);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.currentPlan,
+.recommendedPlan {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(var(--theme-border-rgb), 0.3);
+}
+
+.currentPlan {
+  background: rgba(var(--theme-border-rgb), 0.1);
+}
+
+.recommendedPlan {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--theme-primary-rgb), 0.1),
+    rgba(var(--theme-accent-rgb), 0.1)
+  );
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+  position: relative;
+}
+
+.recommendedPlan::before {
+  content: "RECOMMENDED";
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-accent)
+  );
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.currentPlan h4,
+.recommendedPlan h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--theme-text);
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--theme-primary);
+}
+
+.price span {
+  font-size: 0.875rem;
+  color: var(--theme-textSecondary);
+  font-weight: 500;
+}
+
+.currentPlan ul,
+.recommendedPlan ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.currentPlan li,
+.recommendedPlan li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(var(--theme-border-rgb), 0.2);
+  font-size: 0.875rem;
+  color: var(--theme-text);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.currentPlan li:last-child,
+.recommendedPlan li:last-child {
+  border-bottom: none;
+}
+
+.currentPlan li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--theme-textSecondary);
+}
+
+.recommendedPlan li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--theme-accent);
+  font-weight: bold;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(var(--theme-border-rgb), 0.2);
+}
+
+.footer button {
+  flex: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .overlay {
+    padding: 0.5rem;
+  }
+
+  .modal {
+    max-width: none;
+  }
+
+  .header {
+    padding: 1rem;
+  }
+
+  .body {
+    padding: 1rem;
+  }
+
+  .comparison {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .footer {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

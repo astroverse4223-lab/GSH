@@ -1,0 +1,738 @@
+/* Base Active Users Card */
+.activeUsersCard {
+  background: rgba(26, 26, 46, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+}
+
+.activeUsersCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+  background-size: 200% 100%;
+  animation: gradientFlow 4s ease-in-out infinite;
+}
+
+.activeUsersCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+}
+
+@keyframes gradientFlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.headerIcon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activityIndicator {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activityDot {
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: activityPulse 2s ease-in-out infinite;
+}
+
+@keyframes activityPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
+
+.headerText {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.userCount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 12px;
+  padding: 8px 12px;
+  min-width: 60px;
+}
+
+.countNumber {
+  font-size: 20px;
+  font-weight: bold;
+  color: #8b5cf6;
+  line-height: 1;
+}
+
+.countLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Users List */
+.usersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.usersList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.usersList::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.usersList::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
+}
+
+.usersList::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
+
+/* User Item */
+.userItem {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  animation: slideInUp 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation Delays */
+.delay0 {
+  animation-delay: 0s;
+}
+.delay1 {
+  animation-delay: 0.1s;
+}
+.delay2 {
+  animation-delay: 0.2s;
+}
+.delay3 {
+  animation-delay: 0.3s;
+}
+.delay4 {
+  animation-delay: 0.4s;
+}
+
+.userLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.userContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.userContent:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateX(4px);
+}
+
+.userContent:hover .hoverGlow {
+  opacity: 1;
+}
+
+.hoverGlow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 92, 246, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.userContent:hover .hoverGlow {
+  left: 100%;
+}
+
+/* Avatar Section */
+.avatarContainer {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+.avatarWrapper:hover {
+  border-color: rgba(139, 92, 246, 0.8);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatarFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.show {
+  display: flex !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+.userContent:hover .avatar {
+  transform: scale(1.1);
+}
+
+.statusDot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+
+.statusPlaying {
+  background: #10b981;
+  animation: statusGlow 2s ease-in-out infinite;
+}
+
+.statusOnline {
+  background: #3b82f6;
+}
+
+@keyframes statusGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0);
+  }
+}
+
+.playingIcon {
+  font-size: 6px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* User Info */
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userStatus {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Gaming Badge */
+.gamingBadge {
+  flex-shrink: 0;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gamingIcon {
+  font-size: 14px;
+  animation: fireGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes fireGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px #f59e0b);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px #f59e0b);
+  }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.emptyText {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+.emptySubText {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Live Indicator */
+.liveIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  background: #dc2626;
+  border-radius: 50%;
+  animation: livePulse 1s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+.liveText {
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Quick Actions */
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.actionButton {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 12px 8px;
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.actionButton:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.actionIcon {
+  font-size: 14px;
+}
+
+.actionText {
+  font-weight: 600;
+}
+
+/* Theme Variations */
+.neon {
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.neon:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 255, 255, 0.2);
+}
+
+.neon .userContent {
+  border-color: rgba(0, 255, 255, 0.2);
+}
+
+.neon .userContent:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.4);
+}
+
+.cyberpunk {
+  border-color: rgba(255, 20, 147, 0.3);
+}
+
+.cyberpunk:hover {
+  border-color: rgba(255, 20, 147, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 20, 147, 0.2);
+}
+
+.cyberpunk .userContent {
+  border-color: rgba(255, 20, 147, 0.2);
+}
+
+.cyberpunk .userContent:hover {
+  background: rgba(255, 20, 147, 0.1);
+  border-color: rgba(255, 20, 147, 0.4);
+}
+
+/* Additional Theme Styles */
+.default {
+  border-color: rgba(255, 107, 26, 0.3);
+}
+
+.default:hover {
+  border-color: rgba(255, 107, 26, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 107, 26, 0.2);
+}
+
+.default .userContent {
+  border-color: rgba(255, 107, 26, 0.2);
+}
+
+.default .userContent:hover {
+  background: rgba(255, 107, 26, 0.1);
+  border-color: rgba(255, 107, 26, 0.4);
+}
+
+.valorant {
+  border-color: rgba(255, 70, 85, 0.3);
+}
+
+.valorant:hover {
+  border-color: rgba(255, 70, 85, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 70, 85, 0.2);
+}
+
+.valorant .userContent {
+  border-color: rgba(255, 70, 85, 0.2);
+}
+
+.valorant .userContent:hover {
+  background: rgba(255, 70, 85, 0.1);
+  border-color: rgba(255, 70, 85, 0.4);
+}
+
+.fortnite {
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.fortnite:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+}
+
+.fortnite .userContent {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.fortnite .userContent:hover {
+  background: rgba(0, 212, 255, 0.1);
+  border-color: rgba(0, 212, 255, 0.4);
+}
+
+.matrix {
+  border-color: rgba(0, 255, 65, 0.3);
+}
+
+.matrix:hover {
+  border-color: rgba(0, 255, 65, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 255, 65, 0.2);
+}
+
+.matrix .userContent {
+  border-color: rgba(0, 255, 65, 0.2);
+}
+
+.matrix .userContent:hover {
+  background: rgba(0, 255, 65, 0.1);
+  border-color: rgba(0, 255, 65, 0.4);
+}
+
+.synthwave {
+  border-color: rgba(255, 27, 141, 0.3);
+}
+
+.synthwave:hover {
+  border-color: rgba(255, 27, 141, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 27, 141, 0.2);
+}
+
+.synthwave .userContent {
+  border-color: rgba(255, 27, 141, 0.2);
+}
+
+.synthwave .userContent:hover {
+  background: rgba(255, 27, 141, 0.1);
+  border-color: rgba(255, 27, 141, 0.4);
+}
+
+.witcher {
+  border-color: rgba(255, 165, 0, 0.3);
+}
+
+.witcher:hover {
+  border-color: rgba(255, 165, 0, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 165, 0, 0.2);
+}
+
+.witcher .userContent {
+  border-color: rgba(255, 165, 0, 0.2);
+}
+
+.witcher .userContent:hover {
+  background: rgba(255, 165, 0, 0.1);
+  border-color: rgba(255, 165, 0, 0.4);
+}
+
+.ghostrunner {
+  border-color: rgba(255, 0, 128, 0.3);
+}
+
+.ghostrunner:hover {
+  border-color: rgba(255, 0, 128, 0.5);
+  box-shadow: 0 15px 35px rgba(255, 0, 128, 0.2);
+}
+
+.ghostrunner .userContent {
+  border-color: rgba(255, 0, 128, 0.2);
+}
+
+.ghostrunner .userContent:hover {
+  background: rgba(255, 0, 128, 0.1);
+  border-color: rgba(255, 0, 128, 0.4);
+}
+
+.darksouls {
+  border-color: rgba(184, 134, 11, 0.3);
+}
+
+.darksouls:hover {
+  border-color: rgba(184, 134, 11, 0.5);
+  box-shadow: 0 15px 35px rgba(184, 134, 11, 0.2);
+}
+
+.darksouls .userContent {
+  border-color: rgba(184, 134, 11, 0.2);
+}
+
+.darksouls .userContent:hover {
+  background: rgba(184, 134, 11, 0.1);
+  border-color: rgba(184, 134, 11, 0.4);
+}
+
+.halo {
+  border-color: rgba(0, 115, 230, 0.3);
+}
+
+.halo:hover {
+  border-color: rgba(0, 115, 230, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 115, 230, 0.2);
+}
+
+.halo .userContent {
+  border-color: rgba(0, 115, 230, 0.2);
+}
+
+.halo .userContent:hover {
+  background: rgba(0, 115, 230, 0.1);
+  border-color: rgba(0, 115, 230, 0.4);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .activeUsersCard {
+    padding: 20px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .headerText {
+    font-size: 16px;
+  }
+
+  .userContent {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .avatarWrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userName {
+    font-size: 14px;
+  }
+
+  .userStatus {
+    font-size: 11px;
+  }
+
+  .quickActions {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}

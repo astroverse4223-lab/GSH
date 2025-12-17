@@ -1,0 +1,14 @@
+{
+  "compile-hero.disable-compile-files-on-did-save-code": false,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "tailwindCSS.includeLanguages": {
+    "html": "html",
+    "javascript": "javascript",
+    "typescript": "typescript"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

@@ -1,0 +1,841 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.container.compact {
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.skeleton {
+  height: 60px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary, #374151) 25%,
+    var(--bg-tertiary, #4b5563) 50%,
+    var(--bg-secondary, #374151) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.levelInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.levelBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.levelText {
+  color: var(--primary-color, #3b82f6);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.levelTitle {
+  color: var(--text-secondary, #6b7280);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.streak {
+  color: var(--accent-color, #ff6b6b);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.xpText {
+  color: var(--text-secondary, #6b7280);
+  font-weight: 500;
+}
+
+.progressBarContainer {
+  position: relative;
+  height: 12px;
+  width: 100%;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressBarBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 100%);
+  border-radius: 9999px;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffa500, #ff6b6b);
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.progressBar[data-progress="0"] {
+  --progress-width: 0%;
+}
+.progressBar[data-progress="1"] {
+  --progress-width: 1%;
+}
+.progressBar[data-progress="2"] {
+  --progress-width: 2%;
+}
+.progressBar[data-progress="3"] {
+  --progress-width: 3%;
+}
+.progressBar[data-progress="4"] {
+  --progress-width: 4%;
+}
+.progressBar[data-progress="5"] {
+  --progress-width: 5%;
+}
+.progressBar[data-progress="6"] {
+  --progress-width: 6%;
+}
+.progressBar[data-progress="7"] {
+  --progress-width: 7%;
+}
+.progressBar[data-progress="8"] {
+  --progress-width: 8%;
+}
+.progressBar[data-progress="9"] {
+  --progress-width: 9%;
+}
+.progressBar[data-progress="10"] {
+  --progress-width: 10%;
+}
+.progressBar[data-progress="11"] {
+  --progress-width: 11%;
+}
+.progressBar[data-progress="12"] {
+  --progress-width: 12%;
+}
+.progressBar[data-progress="13"] {
+  --progress-width: 13%;
+}
+.progressBar[data-progress="14"] {
+  --progress-width: 14%;
+}
+.progressBar[data-progress="15"] {
+  --progress-width: 15%;
+}
+.progressBar[data-progress="16"] {
+  --progress-width: 16%;
+}
+.progressBar[data-progress="17"] {
+  --progress-width: 17%;
+}
+.progressBar[data-progress="18"] {
+  --progress-width: 18%;
+}
+.progressBar[data-progress="19"] {
+  --progress-width: 19%;
+}
+.progressBar[data-progress="20"] {
+  --progress-width: 20%;
+}
+.progressBar[data-progress="21"] {
+  --progress-width: 21%;
+}
+.progressBar[data-progress="22"] {
+  --progress-width: 22%;
+}
+.progressBar[data-progress="23"] {
+  --progress-width: 23%;
+}
+.progressBar[data-progress="24"] {
+  --progress-width: 24%;
+}
+.progressBar[data-progress="25"] {
+  --progress-width: 25%;
+}
+.progressBar[data-progress="26"] {
+  --progress-width: 26%;
+}
+.progressBar[data-progress="27"] {
+  --progress-width: 27%;
+}
+.progressBar[data-progress="28"] {
+  --progress-width: 28%;
+}
+.progressBar[data-progress="29"] {
+  --progress-width: 29%;
+}
+.progressBar[data-progress="30"] {
+  --progress-width: 30%;
+}
+.progressBar[data-progress="31"] {
+  --progress-width: 31%;
+}
+.progressBar[data-progress="32"] {
+  --progress-width: 32%;
+}
+.progressBar[data-progress="33"] {
+  --progress-width: 33%;
+}
+.progressBar[data-progress="34"] {
+  --progress-width: 34%;
+}
+.progressBar[data-progress="35"] {
+  --progress-width: 35%;
+}
+.progressBar[data-progress="36"] {
+  --progress-width: 36%;
+}
+.progressBar[data-progress="37"] {
+  --progress-width: 37%;
+}
+.progressBar[data-progress="38"] {
+  --progress-width: 38%;
+}
+.progressBar[data-progress="39"] {
+  --progress-width: 39%;
+}
+.progressBar[data-progress="40"] {
+  --progress-width: 40%;
+}
+.progressBar[data-progress="41"] {
+  --progress-width: 41%;
+}
+.progressBar[data-progress="42"] {
+  --progress-width: 42%;
+}
+.progressBar[data-progress="43"] {
+  --progress-width: 43%;
+}
+.progressBar[data-progress="44"] {
+  --progress-width: 44%;
+}
+.progressBar[data-progress="45"] {
+  --progress-width: 45%;
+}
+.progressBar[data-progress="46"] {
+  --progress-width: 46%;
+}
+.progressBar[data-progress="47"] {
+  --progress-width: 47%;
+}
+.progressBar[data-progress="48"] {
+  --progress-width: 48%;
+}
+.progressBar[data-progress="49"] {
+  --progress-width: 49%;
+}
+.progressBar[data-progress="50"] {
+  --progress-width: 50%;
+}
+.progressBar[data-progress="51"] {
+  --progress-width: 51%;
+}
+.progressBar[data-progress="52"] {
+  --progress-width: 52%;
+}
+.progressBar[data-progress="53"] {
+  --progress-width: 53%;
+}
+.progressBar[data-progress="54"] {
+  --progress-width: 54%;
+}
+.progressBar[data-progress="55"] {
+  --progress-width: 55%;
+}
+.progressBar[data-progress="56"] {
+  --progress-width: 56%;
+}
+.progressBar[data-progress="57"] {
+  --progress-width: 57%;
+}
+.progressBar[data-progress="58"] {
+  --progress-width: 58%;
+}
+.progressBar[data-progress="59"] {
+  --progress-width: 59%;
+}
+.progressBar[data-progress="60"] {
+  --progress-width: 60%;
+}
+.progressBar[data-progress="61"] {
+  --progress-width: 61%;
+}
+.progressBar[data-progress="62"] {
+  --progress-width: 62%;
+}
+.progressBar[data-progress="63"] {
+  --progress-width: 63%;
+}
+.progressBar[data-progress="64"] {
+  --progress-width: 64%;
+}
+.progressBar[data-progress="65"] {
+  --progress-width: 65%;
+}
+.progressBar[data-progress="66"] {
+  --progress-width: 66%;
+}
+.progressBar[data-progress="67"] {
+  --progress-width: 67%;
+}
+.progressBar[data-progress="68"] {
+  --progress-width: 68%;
+}
+.progressBar[data-progress="69"] {
+  --progress-width: 69%;
+}
+.progressBar[data-progress="70"] {
+  --progress-width: 70%;
+}
+.progressBar[data-progress="71"] {
+  --progress-width: 71%;
+}
+.progressBar[data-progress="72"] {
+  --progress-width: 72%;
+}
+.progressBar[data-progress="73"] {
+  --progress-width: 73%;
+}
+.progressBar[data-progress="74"] {
+  --progress-width: 74%;
+}
+.progressBar[data-progress="75"] {
+  --progress-width: 75%;
+}
+.progressBar[data-progress="76"] {
+  --progress-width: 76%;
+}
+.progressBar[data-progress="77"] {
+  --progress-width: 77%;
+}
+.progressBar[data-progress="78"] {
+  --progress-width: 78%;
+}
+.progressBar[data-progress="79"] {
+  --progress-width: 79%;
+}
+.progressBar[data-progress="80"] {
+  --progress-width: 80%;
+}
+.progressBar[data-progress="81"] {
+  --progress-width: 81%;
+}
+.progressBar[data-progress="82"] {
+  --progress-width: 82%;
+}
+.progressBar[data-progress="83"] {
+  --progress-width: 83%;
+}
+.progressBar[data-progress="84"] {
+  --progress-width: 84%;
+}
+.progressBar[data-progress="85"] {
+  --progress-width: 85%;
+}
+.progressBar[data-progress="86"] {
+  --progress-width: 86%;
+}
+.progressBar[data-progress="87"] {
+  --progress-width: 87%;
+}
+.progressBar[data-progress="88"] {
+  --progress-width: 88%;
+}
+.progressBar[data-progress="89"] {
+  --progress-width: 89%;
+}
+.progressBar[data-progress="90"] {
+  --progress-width: 90%;
+}
+.progressBar[data-progress="91"] {
+  --progress-width: 91%;
+}
+.progressBar[data-progress="92"] {
+  --progress-width: 92%;
+}
+.progressBar[data-progress="93"] {
+  --progress-width: 93%;
+}
+.progressBar[data-progress="94"] {
+  --progress-width: 94%;
+}
+.progressBar[data-progress="95"] {
+  --progress-width: 95%;
+}
+.progressBar[data-progress="96"] {
+  --progress-width: 96%;
+}
+.progressBar[data-progress="97"] {
+  --progress-width: 97%;
+}
+.progressBar[data-progress="98"] {
+  --progress-width: 98%;
+}
+.progressBar[data-progress="99"] {
+  --progress-width: 99%;
+}
+.progressBar[data-progress="100"] {
+  --progress-width: 100%;
+}
+
+/* Enhanced info styles */
+.enhancedInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 80px;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+}
+
+.nextRewards {
+  padding: 0.75rem;
+  background: var(--bg-tertiary, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+}
+
+.rewardsTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  margin-bottom: 0.5rem;
+}
+
+.rewardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reward {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressBar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+  border-radius: 9999px;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Theme-specific progress bar styles */
+.progressBarValorant {
+  background: linear-gradient(90deg, #ff4655, #fd4556, #ff6b7d);
+  box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
+}
+
+.progressBarCyberpunk {
+  background: linear-gradient(90deg, #00f5ff, #00d4ff, #39ff14);
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+.progressBarFortnite {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.progressBarMatrix {
+  background: linear-gradient(90deg, #00ff00, #00cc00, #39ff14);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.progressBarSynthwave {
+  background: linear-gradient(90deg, #ff00ff, #ff0080, #8000ff);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+.progressBarWitcher {
+  background: linear-gradient(90deg, #ffa500, #ff8c00, #ffab00);
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.progressBarGhostrunner {
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e, #ffa8a8);
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.progressBarDarksouls {
+  background: linear-gradient(90deg, #8b7355, #a0896b, #b8a082);
+  box-shadow: 0 0 10px rgba(139, 115, 85, 0.5);
+}
+
+.progressBarHalo {
+  background: linear-gradient(90deg, #00a8ff, #0078d4, #005a9e);
+  box-shadow: 0 0 10px rgba(0, 168, 255, 0.5);
+}
+
+.progressBarDefault {
+  background: linear-gradient(90deg, #ffd700, #ffa500, #ff6b6b);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Theme-specific text styles */
+.textValorant {
+  color: #ff4655;
+}
+
+.textCyberpunk {
+  color: #00f5ff;
+}
+
+.textFortnite {
+  color: #3b82f6;
+}
+
+.textMatrix {
+  color: #00ff00;
+}
+
+.textSynthwave {
+  color: #ff00ff;
+}
+
+.textWitcher {
+  color: #ffa500;
+}
+
+.textGhostrunner {
+  color: #ff6b6b;
+}
+
+.textDarksouls {
+  color: #8b7355;
+}
+
+.textHalo {
+  color: #00a8ff;
+}
+
+.textDefault {
+  color: #3b82f6;
+}
+
+/* Enhanced Info Styles */
+.enhancedInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 0.875rem;
+  color: var(--text-primary, white);
+  font-weight: 600;
+}
+
+.nextRewards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rewardsTitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rewardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reward {
+  font-size: 0.75rem;
+  color: var(--accent-color, #ffd700);
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Comprehensive Responsive Design */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .stats {
+    gap: 2rem;
+  }
+
+  .stat {
+    min-width: 120px;
+  }
+
+  .levelInfo {
+    gap: 1rem;
+  }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .container {
+    padding: 1.25rem;
+  }
+
+  .stats {
+    gap: 1.5rem;
+  }
+
+  .stat {
+    min-width: 100px;
+  }
+}
+
+/* Large Tablet/Small Desktop (1025px - 1199px) - iPad Pro, Surface Pro, Zenbook */
+@media (max-width: 1199px) and (min-width: 1025px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .stats {
+    gap: 1.25rem;
+  }
+
+  .stat {
+    min-width: 90px;
+  }
+
+  .levelInfo {
+    gap: 0.75rem;
+  }
+}
+
+/* Tablet (769px - 1024px) - iPad Air, iPad Mini, Surface Pro portrait */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .container {
+    padding: 0.875rem;
+  }
+
+  .stats {
+    justify-content: space-around;
+    gap: 1rem;
+  }
+
+  .stat {
+    min-width: 80px;
+  }
+
+  .levelInfo {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* Small Tablet/Large Mobile (641px - 768px) */
+@media (max-width: 768px) and (min-width: 641px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .stats {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0.75rem;
+  }
+
+  .stat {
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+  }
+
+  .levelInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+  }
+}
+
+/* Mobile (480px - 640px) */
+@media (max-width: 640px) and (min-width: 481px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat {
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: auto;
+  }
+
+  .levelInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .stat {
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: auto;
+  }
+
+  .statLabel {
+    font-size: 0.7rem;
+  }
+
+  .statValue {
+    font-size: 0.8rem;
+  }
+
+  .levelInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .levelText {
+    font-size: 0.9rem;
+  }
+
+  .levelTitle {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.375rem;
+  }
+
+  .streak {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.375rem;
+  }
+}
